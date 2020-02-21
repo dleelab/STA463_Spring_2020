@@ -1,5 +1,5 @@
 ---
-title: "Home"
+title: "STA 463 Lab Sessions"
 site: workflowr::wflow_site
 output:
   workflowr::wflow_html:
@@ -8,9 +8,14 @@ editor_options:
   chunk_output_type: console
 ---
 
-## Basic R programming
-*[In-class assignment 1](inclass1.html)
+#### Lab1
+* [In-class Lab Assignment 1](inclass1.html)
+* [In-class Lab Assignment 1 Solution](inclass1_lec.html)
 
-## Plotting
+#### Lab2
+* [Exploratory Data Analysis](eda.html)
+* [Data Simulation](slrsim.html)
 
-## ggplot2
+#### Lab3
+
+
