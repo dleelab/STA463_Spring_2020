@@ -100,7 +100,7 @@ wine.qual$quality <- factor(wine.qual$quality)
 ggpairs(wine.qual, aes(colour=quality, alpha=0.6), bins=10)
 ```
 
-### Violin plots (x=quality, y=citric.acid, fill=quality)
+### Violin plots (quality vs citric.acid)
 ```{r}
 wine.qual.all$quality <- factor(wine.qual.all$quality)
 ggplot(wine.qual.all, aes(x=quality, y=citric.acid, fill=quality)) + 
