@@ -52,8 +52,7 @@ ggpairs(wine.data[,c("Type","Alcohol","Proline","Color")], aes(colour=Type, alph
 ggplot(wine.data, aes(x=Type, y=Alcohol, fill=Type)) + 
   geom_violin(trim=FALSE)+
   geom_boxplot(width=0.1, fill="white")+
-  labs(title="Alcohol by dose",x="Wine Type", y = "Alcohol") +
-  theme_classic() +
+  labs(title="Alcohol by wine type",x="Wine Type", y = "Alcohol") +
   scale_fill_brewer(palette="RdBu") + 
   theme_minimal()
 ```
@@ -94,10 +93,21 @@ head(wine.qual)
 table(wine.qual$quality)
 ```
 
+
 ### A matrix of scatter plots
 ```{r}
 wine.qual$quality <- factor(wine.qual$quality)
 ggpairs(wine.qual, aes(colour=quality, alpha=0.6), bins=10)
+```
+
+### Violin plots (x=quality, y=citric.acid, fill=quality)
+```{r}
+ggplot(wine.qual.all, aes(x=quality, y=citric.acid, fill=quality)) + 
+  geom_violin(trim=FALSE)+
+  geom_boxplot(width=0.1, fill="white")+
+  labs(title="Citric Acid by Wine Quality",x="Quality", y = "Citric Acid") +
+  scale_fill_brewer(palette="RdBu") + 
+  theme_minimal()
 ```
 
 ### Correlations
