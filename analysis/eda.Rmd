@@ -1,0 +1,152 @@
+---
+title: "Exploratory Data Analysis"
+author: "Donghyung Lee"
+date: "`r Sys.Date()`"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+### Install and load R packages
+```{r }
+if(FALSE){
+install.packages("pheatmap")
+install.packages("ggplot2")
+install.packages("corrplot")
+install.packages("plyr")
+install.packages("GGally")
+}
+library(ggplot2)
+library(pheatmap)
+library(corrplot)
+library(plyr)
+library(GGally)
+```
+
+### Read wine data
+```{r}
+wine.data <- read.table("https://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data", sep=",")
+colnames(wine.data) <- c("Type","Alcohol","Malic","Ash","Alcalinity","Magnesium","Phenols",
+                         "Flavonoids","Nonflavonoids","Proanthocyanins","Color",
+                         "Hue","Dilution","Proline")
+head(wine.data)
+wine.data$Type <- factor(wine.data$Type)
+```
+
+### Summary
+```{r}
+summary(wine.data)
+```
+
+
+### A matrix of scatter plots
+```{r}
+pairs(wine.data)
+pairs(wine.data[,c("Type","Alcohol","Proline","Color")])
+ggpairs(wine.data[,c("Type","Alcohol","Proline","Color")], aes(colour=Type, alpha=0.6), bins=10)
+```
+
+
+### Violin plots
+```{r}
+ggplot(wine.data, aes(x=Type, y=Alcohol, fill=Type)) + 
+  geom_violin(trim=FALSE)+
+  geom_boxplot(width=0.1, fill="white")+
+  labs(title="Alcohol by dose",x="Wine Type", y = "Alcohol") +
+  theme_classic() +
+  scale_fill_brewer(palette="RdBu") + 
+  theme_minimal()
+```
+
+### Histograms
+```{r}
+type.alcohol.mean <- ddply(wine.data, "Type", summarise, alcohol.mean=mean(Alcohol))
+type.alcohol.mean
+
+ggplot(wine.data, aes(x=Alcohol, fill=Type, color=Type)) +
+  geom_histogram(position="identity", alpha=0.8, bins=20) +
+  geom_vline(data=type.alcohol.mean, aes(xintercept=alcohol.mean, color=Type),
+             linetype="dashed") +
+  scale_color_brewer(palette="Dark2") +
+  scale_fill_brewer(palette="Dark2") +
+  theme_minimal()
+```
+
+
+### Correlations 
+```{r}
+wine.cor <- cor(wine.data[,-1]) # Remove Type 
+corrplot(wine.cor, order="hclust")
+pheatmap(wine.cor)
+```
+
+
+### Read white wine quality data
+```{r}
+wine.qual <- read.table("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv", sep=";", header=T)
+dim(wine.qual)
+wine.qual.all <- wine.qual
+set.seed(1000)
+rsam <- sample(1:nrow(wine.qual), 1000, replace=F)
+wine.qual <- wine.qual[rsam,][,c(1,3,4,8,9,11,12)]
+dim(wine.qual)
+head(wine.qual)
+table(wine.qual$quality)
+```
+
+### A matrix of scatter plots
+```{r}
+wine.qual$quality <- factor(wine.qual$quality)
+ggpairs(wine.qual, aes(colour=quality, alpha=0.6), bins=10)
+```
+
+### Correlations
+```{r}
+qual.cor <- cor(wine.qual.all)
+corrplot(qual.cor)
+pheatmap(qual.cor)
+```
+
+### Residual Sugar vs Density
+```{r}
+wine.qual.all$quality <- factor(wine.qual.all$quality)
+ggplot(wine.qual.all, aes(x=residual.sugar, y=density, color=quality)) +
+  geom_point() +
+  labs(title="residual sugar vs density",x="Residual Sugar", y = "Density") +
+  scale_color_brewer(palette="Dark2") +
+  theme_minimal()
+
+ggplot(wine.qual, aes(x=residual.sugar, y=density, color=quality)) +
+  geom_point() +
+  labs(title="residual sugar vs density",x="Residual Sugar", y = "Density") +
+  scale_color_brewer(palette="Dark2") +
+  theme_minimal()
+
+ggplot(wine.qual, aes(x=residual.sugar, y=density, color=quality)) +
+  geom_point() +
+  labs(title="residual sugar vs density",x="Residual Sugar", y = "Density") +
+  scale_color_brewer(palette="Dark2") +
+  facet_grid(rows=vars(quality)) +
+  theme_minimal()
+
+```
+
+### pH vs Fixed acidity
+```{r}
+ggplot(wine.qual, aes(x=pH, y=fixed.acidity, color=quality)) +
+  geom_point() +
+  labs(title="pH vs fixed acidity",x="pH", y = "fixed acidity") +
+  scale_color_brewer(palette="Dark2") +
+  theme_minimal()
+```
+
+
+### add fitted lines (pH vs Fixed acidity)
+```{r}
+ggplot(wine.qual, aes(x=pH, y=fixed.acidity, color = quality) ) +
+     geom_point() +
+     geom_smooth(method = "lm", se = FALSE) +
+     labs(title="pH vs fixed acidity",x="pH", y = "fixed acidity") +
+     scale_color_brewer(palette="Dark2") +
+     theme_minimal()
+```
