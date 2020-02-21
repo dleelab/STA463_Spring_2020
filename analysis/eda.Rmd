@@ -113,7 +113,7 @@ ggplot(wine.qual.all, aes(x=quality, y=citric.acid, fill=quality)) +
 
 ### Correlations
 ```{r}
-qual.cor <- cor(wine.qual.all)
+qual.cor <- cor(wine.qual.all[,-12])
 corrplot(qual.cor)
 pheatmap(qual.cor)
 ```
