@@ -1,0 +1,241 @@
+---
+title: "SLR Simulation"
+author: "Donghyung Lee"
+date: "`r Sys.Date()`"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+
+### Install and load R packages
+```{r }
+if(FALSE){
+install.packages("ggplot2")
+}
+library("ggplot2")
+```
+
+
+### Simulating SLR
+```{r }
+set.seed(12345)
+beta0 <- -1.48
+beta1 <- 1.8
+sigma <- 10
+N <- 500
+x <- runif(N, 5, 30)
+e <- rnorm(N, sd=sigma)
+y <- beta0 + beta1*x + e
+simdata <- data.frame(y=y, x=x)
+```
+
+### Fitting simple linear regression
+```{r}
+fit <- lm(y~x)
+summary(fit)
+
+simdata$fitted <- fit$fitted.values
+
+ggplot(simdata, aes(x=x, y=y)) + 
+  geom_point() + 
+  geom_line(aes(x=x, y=fitted), col="red", size=2)+
+  theme_minimal()
+```
+
+### Sxx, Syy, Sxy, b1, b0, SSE, MSE, RSE, DF
+```{r}
+Sxx <- sum((x-mean(x))^2)
+Sxx
+Syy <- sum((y-mean(y))^2)
+Syy
+Sxy <- sum((x-mean(x))*(y-mean(y)))
+Sxy
+b1 <- Sxy/Sxx
+b1
+b0 <- mean(y) - b1*mean(x)
+b0
+SSE <- sum((y-fit$fitted.values)^2)
+SSE
+SSE <- sum((fit$residuals)^2)
+SSE
+MSE <- SSE/(length(y)-2)
+MSE
+RSE <- sqrt(MSE)
+RSE
+df <- length(y)-2
+df
+sd_b1 <- sqrt(MSE/Sxx)
+sd_b1
+
+```
+
+### Sampling distribution of b1 (normal error)
+```{r}
+set.seed(2000)
+beta0 <- -1.48
+beta1 <- 1.8
+sigma <- 10
+N <- 100
+x <- runif(N, 5, 30)
+Sxx <- sum((x-mean(x))^2)
+num.sim <- 1000
+
+b1.dist <- rep(NA, num.sim)
+for(i in 1:num.sim){
+  e <- rnorm(N, sd=sigma)
+  y <- beta0 + beta1*x + e
+  b1 <- sum((x-mean(x))*(y-mean(y)))/sum((x-mean(x))^2)
+  b1.dist[i] <- b1
+  if (i%%100==0) {cat(paste0(" ", i))}
+}
+
+b1.df <- data.frame(b1.dist=b1.dist)
+ggplot(b1.df, aes(x=b1.dist)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.05,
+                 colour="black", fill="white") + 
+  stat_function(fun = dnorm, n=1000, colour="red", 
+                args=list(mean=beta1, sd=sqrt(sigma^2/Sxx))) +
+  geom_vline(aes(xintercept=beta1), color="blue", linetype="dashed") +
+  labs(title="Simulated sampling distribution of b1 (normal error)", x="b1", y = "Density") +
+  theme_minimal()
+
+mean(b1.dist)
+beta1
+
+sd(b1.dist)
+sd_b1=sqrt(sigma^2/Sxx)
+sd_b1
+
+qqnorm(b1.dist, col = "darkred", main = "Normal Q-Q Plot")
+qqline(b1.dist, col = "darkblue", lwd = 3)
+```
+
+
+### Sampling distribution of b1 (non-normal error)
+```{r}
+set.seed(2000)
+beta0 <- -1.48
+beta1 <- 1.8
+sigma <- 10
+N <- 100
+x <- runif(N, 5, 30)
+Sxx <- sum((x-mean(x))^2)
+num.sim <- 1000
+
+b1.dist <- rep(NA, num.sim)
+for(i in 1:num.sim){
+  u <- runif(N, -20, 20)
+  e <- sigma*((u-mean(u))/sd(u)) # make mean(e)=0 sd(e)=10=sigma, non-normal error
+  y <- beta0 + beta1*x + e
+  b1 <- sum((x-mean(x))*(y-mean(y)))/sum((x-mean(x))^2)
+  b1.dist[i] <- b1
+  if (i%%100==0) {cat(paste0(" ", i))}
+}
+
+b1.df <- data.frame(b1.dist=b1.dist)
+ggplot(b1.df, aes(x=b1.dist)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.05,
+                 colour="black", fill="white") + 
+  stat_function(fun = dnorm, n=1000, colour="red", 
+                args=list(mean=beta1, sd=sqrt(sigma^2/Sxx))) +
+  geom_vline(aes(xintercept=beta1), color="blue", linetype="dashed") +
+  labs(title="Simulated sampling distribution of b1 (non-normal error)", x="b1", y = "Density") +
+  theme_minimal()
+
+mean(b1.dist)
+beta1
+
+sd(b1.dist)
+sd_b1=sqrt(sigma^2/Sxx)
+sd_b1
+
+qqnorm(b1.dist, col = "darkred", main = "Normal Q-Q Plot")
+qqline(b1.dist, col = "darkblue", lwd = 3)
+```
+
+
+### Sampling distribution of b0 (normal error)
+```{r}
+set.seed(2020)
+beta0 <- -1.48
+beta1 <- 1.8
+sigma <- 10
+N <- 100
+x <- runif(N, 5, 30)
+Sxx <- sum((x-mean(x))^2)
+num.sim <- 1000
+
+b0.dist <- rep(NA, num.sim)
+for(i in 1:num.sim){
+  e <- rnorm(N, sd=sigma)
+  y <- beta0 + beta1*x + e
+  b1 <- sum((x-mean(x))*(y-mean(y)))/sum((x-mean(x))^2)
+  b0 <- mean(y)-b1*mean(x)
+  b0.dist[i] <- b0
+  if (i%%100==0) {cat(paste0(" ", i))}
+}
+
+b0.df <- data.frame(b0.dist=b0.dist)
+ggplot(b0.df, aes(x=b0.dist)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.5,
+                 colour="black", fill="white") + 
+  stat_function(fun = dnorm, n=1000, colour="red", 
+                args=list(mean=beta0, sd=sqrt(sigma^2*(1/N+mean(x)^2/Sxx)))) +
+  geom_vline(aes(xintercept=beta0), color="blue", linetype="dashed") +
+  labs(title="Simulated sampling distribution of b0 (normal error)", x="b0", y = "Density") +
+  theme_minimal()
+
+mean(b0.dist)
+beta0
+
+sd(b0.dist)
+sd_b0=sqrt(sigma^2*(1/N+mean(x)^2/Sxx))
+sd_b0
+
+qqnorm(b0.dist, col = "darkred", main = "Normal Q-Q Plot")
+qqline(b0.dist, col = "darkblue", lwd = 3)
+```
+
+### Sampling distribution of b0 (non-normal error)
+```{r}
+set.seed(3000)
+beta0 <- -1.48
+beta1 <- 1.8
+sigma <- 10
+N <- 100
+x <- runif(N, 5, 30)
+Sxx <- sum((x-mean(x))^2)
+num.sim <- 1000
+
+b0.dist <- rep(NA, num.sim)
+for(i in 1:num.sim){
+  u <- runif(N, -20, 20)
+  e <- sigma*((u-mean(u))/sd(u)) # make mean(e)=0 sd(e)=10=sigma, non-normal error
+  y <- beta0 + beta1*x + e
+  b1 <- sum((x-mean(x))*(y-mean(y)))/sum((x-mean(x))^2)
+  b0 <- mean(y)-b1*mean(x)
+  b0.dist[i] <- b0
+  if (i%%100==0) {cat(paste0(" ", i))}
+}
+
+b0.df <- data.frame(b0.dist=b0.dist)
+ggplot(b0.df, aes(x=b0.dist)) + 
+  geom_histogram(aes(y=..density..), binwidth = 0.5,
+                 colour="black", fill="white") + 
+  stat_function(fun = dnorm, n=1000, colour="red", 
+                args=list(mean=beta0, sd=sqrt(sigma^2*(1/N+mean(x)^2/Sxx)))) +
+  geom_vline(aes(xintercept=beta0), color="blue", linetype="dashed") +
+  labs(title="Simulated sampling distribution of b0 (non-normal error)", x="b0", y = "Density") +
+  theme_minimal()
+
+mean(b0.dist)
+beta0
+
+sd(b0.dist)
+sd_b0=sqrt(sigma^2*(1/N+mean(x)^2/Sxx))
+sd_b0
+
+qqnorm(b0.dist, col = "darkred", main = "Normal Q-Q Plot")
+qqline(b0.dist, col = "darkblue", lwd = 3)
+```
