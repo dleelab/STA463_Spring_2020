@@ -16,6 +16,6 @@ editor_options:
 * [Exploratory Data Analysis](eda.html)
 
 #### Lab3
-* [Data Simulation](slrsim.html)
+* [SLR Simulation](slrsim.html)
 
 
