@@ -18,4 +18,8 @@ editor_options:
 #### Lab3
 * [SLR Simulation](slrsim.html)
 
+#### Lab4
+* [SLR CalCOFI data](slr_calcofi.html)
+
+
 
