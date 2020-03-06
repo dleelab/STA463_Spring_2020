@@ -76,7 +76,7 @@ ggplot(cofi, aes(x=log10(depth), y=sal, col=temp)) +
 
 ### Add log10(Depth)
 ```{r}
-cofi$log10depth <- log10(cofi$depth+1)
+cofi$log10depth <- log10(cofi$depth)
 ggpairs(cofi)
 ```
 
