@@ -1,0 +1,254 @@
+---
+title: "COVID-19 Data"
+author: "Donghyung Lee"
+date: "`r Sys.Date()`"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+Most of R codes used here are obtained from https://ramikrispin.github.io/coronavirus/articles/intro_coronavirus_dataset.html
+
+
+### Install and load R packages
+```{r}
+if(FALSE){
+install.packages("dplyr")
+install.packages("tidyr")
+install.packages("plotly")
+install.packages("DT")
+install.packages("devtools")
+devtools::install_github("RamiKrispin/coronavirus")
+install.packages("viridis") #coloring
+}
+library(coronavirus)
+library(dplyr)
+library(tidyr)
+library(plotly)
+library(DT)
+library(pheatmap)
+library(viridis)
+```
+
+### Load data
+```{r}
+data("coronavirus")
+head(coronavirus)
+```
+
+### Total cases
+```{r}
+total_cases <- coronavirus %>% 
+  group_by(type) %>%
+  summarise(cases = sum(cases)) %>%
+  mutate(type = factor(type, levels = c("confirmed", "recovered", "death")))
+total_cases
+
+plot_ly(data = total_cases, 
+        x = ~ type, 
+        y = ~cases, 
+        type = 'bar',
+        text = ~ paste(type, cases, sep = ": "),
+    hoverinfo = 'text') %>%
+  layout(title = "Coronavirus - Cases Distribution",
+         yaxis = list(title = "Number of Cases"),
+         xaxis = list(title = "Case Type"),
+         hovermode = "compare")
+```
+
+### Top effected countries
+```{r}
+confirmed_country <- coronavirus %>% 
+  filter(type == "confirmed") %>%
+  group_by(Country.Region) %>%
+  summarise(total_cases = sum(cases)) %>%
+  mutate(perc = total_cases / sum(total_cases)) %>%
+  arrange(-total_cases)
+
+confirmed_country %>%
+  head(10) %>%
+  datatable(rownames = FALSE,
+            colnames = c("Country", "Cases", "Perc of Total")) %>%
+  formatPercentage("perc", 2)
+
+coronavirus %>% 
+  filter(type == "confirmed", 
+         Country.Region != "Mainland China") %>%
+  group_by(Country.Region) %>%
+  summarise(total_cases = sum(cases)) %>%
+  arrange(-total_cases) %>%
+  mutate(country = factor(Country.Region, levels = Country.Region)) %>%
+  ungroup() %>%
+  plot_ly(labels = ~ country, 
+          values = ~ total_cases,
+          type = "pie",
+          textposition = 'inside',
+        textinfo = 'label+percent',
+        insidetextfont = list(color = '#FFFFFF'),
+        hoverinfo = 'text',
+        text = ~ paste(country, "<br />",
+                     "Number of confirmed cases: ", total_cases, sep = "")) %>%
+  layout(title = "Coronavirus - Confirmed Cases (Excluding China)")
+```
+
+### Recovery and death rates
+```{r}
+coronavirus %>% 
+  filter(Country.Region != "Others") %>%
+  group_by(Country.Region, type) %>%
+  summarise(total_cases = sum(cases)) %>%
+  pivot_wider(names_from = type, values_from = total_cases) %>%
+  arrange(- confirmed) %>%
+  filter(confirmed >= 25) %>%
+  mutate(recover_rate = recovered / confirmed,
+         death_rate = death / confirmed)  %>%
+  datatable(rownames = FALSE,
+            colnames = c("Country", "Confirmed", "Recovered", "Death", "Recovery Rate", "Death Rate")) %>%
+   formatPercentage("recover_rate", 2) %>%
+   formatPercentage("death_rate", 2) 
+
+summ <- coronavirus %>% 
+  filter(Country.Region != "Others") %>%
+  group_by(Country.Region, type) %>%
+  summarise(total_cases = sum(cases)) %>%
+  pivot_wider(names_from = type, values_from = total_cases) %>%
+  arrange(- confirmed) %>%
+  filter(confirmed >= 25) %>%
+  mutate(recover_rate = recovered / confirmed,
+         death_rate = death / confirmed)  
+
+ggplot(as.data.frame(summ), aes(x=log10(confirmed), y=death_rate)) +
+  geom_point() +
+  labs(title="Death rate as a function of log10(Confirmed)",
+       x="Log10(Confirmed)", 
+       y = "Death Rate") +
+  theme_minimal()
+
+```
+
+### Diving into China
+```{r}
+coronavirus %>% 
+  filter(Country.Region == "Mainland China",
+         type == "confirmed") %>%
+  group_by(Province.State, type) %>%
+  summarise(total_cases = sum(cases)) %>%  
+  pivot_wider(names_from = type, values_from = total_cases) %>%
+  arrange(- confirmed) %>%
+  plot_ly(labels = ~ Province.State, 
+                  values = ~confirmed, 
+                  type = 'pie',
+                  textposition = 'inside',
+                  textinfo = 'label+percent',
+                  insidetextfont = list(color = '#FFFFFF'),
+                  hoverinfo = 'text',
+                  text = ~ paste(Province.State, "<br />",
+                                 "Number of confirmed cases: ", confirmed, sep = "")) %>%
+  layout(title = "Total China Confirmed Cases Dist. by Province")
+```
+
+### Daily confirmed cases in China
+```{r}
+China <- coronavirus %>% 
+  filter(Country.Region == "Mainland China",
+         type == "confirmed") %>%
+  pivot_wider(names_from = date, values_from=cases) %>%
+  select(-c(Country.Region, Lat, Long, type))
+
+China <- as.data.frame(China)
+China[is.na(China)] <- 0
+rownames(China) <- China$Province.State
+China$Province.State <- NULL
+China <- as.data.frame(China)
+China.log <- log10(China+1) # convert to log10 scale
+
+pheatmap(China.log, cluster_rows=FALSE, cluster_cols=FALSE,
+         color=magma(100),
+         legend_breaks=c(1, 2, 3, max(China.log)),
+         legend_labels=c(10, 100, 1000, max(China)),
+         main="Daily confirmed cases in China")
+```
+
+
+### Daily recovered cases in China
+```{r}
+China <- coronavirus %>% 
+  filter(Country.Region == "Mainland China",
+         type == "recovered") %>%
+  pivot_wider(names_from = date, values_from=cases) %>%
+  select(-c(Country.Region, Lat, Long, type))
+
+China <- as.data.frame(China)
+China[is.na(China)] <- 0
+rownames(China) <- China$Province.State
+China$Province.State <- NULL
+China <- as.data.frame(China)
+China.log <- log10(China+5) # convert to log10 scale min is -4
+
+pheatmap(China.log, cluster_rows=FALSE, cluster_cols=FALSE,
+         color=magma(100),
+         legend_breaks=c(1, 2, 3, max(China.log)),
+         legend_labels=c(10, 100, 1000, max(China)),
+         main="Daily recovered cases in China")
+```
+
+### Daily death count in China
+```{r}
+China <- coronavirus %>% 
+  filter(Country.Region == "Mainland China",
+         type == "death") %>%
+  pivot_wider(names_from = date, values_from=cases) %>%
+  select(-c(Country.Region, Lat, Long, type))
+
+China <- as.data.frame(China)
+China[is.na(China)] <- 0
+rownames(China) <- China$Province.State
+China$Province.State <- NULL
+China <- as.data.frame(China)
+China.log <- log10(China+1) # convert to log10 scale
+
+pheatmap(China, cluster_rows=FALSE, cluster_cols=FALSE,
+         color=magma(100),
+         main="Daily death count in China")
+```
+
+
+### Diving into US
+```{r}
+coronavirus %>% 
+  filter(Country.Region == "US",
+         type == "confirmed") %>%
+  group_by(Province.State, type) %>%
+  summarise(total_cases = sum(cases)) %>%  
+  pivot_wider(names_from = type, values_from = total_cases) %>%
+  arrange(- confirmed) %>%
+  plot_ly(labels = ~ Province.State, 
+                  values = ~confirmed, 
+                  type = 'pie',
+                  textposition = 'inside',
+                  textinfo = 'label+percent',
+                  insidetextfont = list(color = '#FFFFFF'),
+                  hoverinfo = 'text',
+                  text = ~ paste(Province.State, "<br />",
+                                 "Number of confirmed cases: ", confirmed, sep = "")) %>%
+  layout(title = "Total US Confirmed Cases Dist. by County")
+```
+
+### Daily confirmed cases in USA
+```{r fig.height=8, fig.width=7}
+US <- coronavirus %>% 
+  filter(Country.Region == "US",
+         type == "confirmed") %>%
+  pivot_wider(names_from = date, values_from=cases) %>%
+  select(-c(Country.Region, Lat, Long, type))
+
+US <- as.data.frame(US)
+US[is.na(US)] <- 0
+rownames(US) <- US$Province.State
+US$Province.State <- NULL
+US <- as.data.frame(US)
+
+pheatmap(US, cluster_rows=FALSE, cluster_cols=FALSE,
+         color=magma(100),
+         main="Daily confirmed cases in US")
+```
