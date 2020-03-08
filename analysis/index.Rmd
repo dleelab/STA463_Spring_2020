@@ -21,5 +21,8 @@ editor_options:
 #### Lab4
 * [SLR CalCOFI data](slr_calcofi.html)
 
+#### Lab5
+* [COVID-19 data](corona.html)
+
 
 
