@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Donghyung Lee" />
+
+<meta name="date" content="2020-04-09" />
+
+<title>Multiple Regression Model</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">STA463 Spring 2020</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="https://github.com/dleelab/STA463_Spring_2020">GitHub</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Multiple Regression Model</h1>
+<h4 class="author">Donghyung Lee</h4>
+<h4 class="date">2020-04-09</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2020-04-09
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>STA463_Spring_2020/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20200213code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20200213)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20200213code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20200213)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomdleelabSTA463Spring2020tree3f12a095c5e585f14daf1c6fd6756d98accf08b9targetblank3f12a09a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/dleelab/STA463_Spring_2020/tree/3f12a095c5e585f14daf1c6fd6756d98accf08b9" target="_blank">3f12a09</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomdleelabSTA463Spring2020tree3f12a095c5e585f14daf1c6fd6756d98accf08b9targetblank3f12a09a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    lec/
+
+Untracked files:
+    Untracked:  docs/figure/fit_mr.Rmd/
+
+Unstaged changes:
+    Modified:   analysis/corona.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/dleelab/STA463_Spring_2020/blob/3f12a095c5e585f14daf1c6fd6756d98accf08b9/analysis/fit_mr.Rmd" target="_blank">3f12a09</a>
+</td>
+<td>
+dleelab
+</td>
+<td>
+2020-04-10
+</td>
+<td>
+new
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="multiple-regression-fit-lecture-13" class="section level2">
+<h2>Multiple Regression Fit (Lecture 13)</h2>
+<div id="dataset" class="section level3">
+<h3>1. Dataset</h3>
+<p>The Prestige data frame is the Prestige of Canadian Occupations. It has 102 rows and 6 columns. The observations are occupations. First of all, we remove all observations that have missing values for varaible ``type’’.</p>
+<pre class="r"><code>#install.packages(&quot;car&quot;)
+library(car)</code></pre>
+<pre><code>Loading required package: carData</code></pre>
+<pre class="r"><code>#?Prestige
+mydata=Prestige[!is.na(Prestige$type), ]#remove the observations with missing values for &quot;type&quot;
+unique(mydata$type)</code></pre>
+<pre><code>[1] prof bc   wc  
+Levels: bc prof wc</code></pre>
+<p>To have an idea about the predictor variable and the response, we can view the <strong>enhanced scatterplot</strong>.</p>
+<pre class="r"><code>scatterplot(income~education|type, data=mydata,ylab=&quot;Income&quot;,
+            xlab=&quot;Education&quot;,main=&quot;Income vs Education&quot;)</code></pre>
+<p><img src="figure/fit_mr.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /> Based on the plot, maybe there’s linear relationsihp between education and income. It seems the intercept of bc and prof are similar, different from that of the wc. We also want know whether the slope of the three groups are different (whether interaction term is necessary).</p>
+<p>Alternative method using the ggplot:</p>
+<pre class="r"><code>library(ggplot2)
+ggplot(data=mydata, aes(x=education, y=income)) + 
+  geom_point(aes(colour = factor(type))) +
+  geom_smooth(aes(colour = factor(type)))</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="figure/fit_mr.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="generate-the-design-matrix" class="section level3">
+<h3>2. Generate the design matrix</h3>
+<pre class="r"><code>X=model.matrix(~type,data=mydata)
+#X
+Y=as.matrix(mydata$income)
+solve(t(X)%*%X)%*%t(X)%*%Y</code></pre>
+<pre><code>                [,1]
+(Intercept) 5374.136
+typeprof    5185.315
+typewc      -321.832</code></pre>
+<pre class="r"><code>lm(income~type,data=mydata)#automatically, bc is the reference group.</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ type, data = mydata)
+
+Coefficients:
+(Intercept)     typeprof       typewc  
+     5374.1       5185.3       -321.8  </code></pre>
+</div>
+<div id="mix-continuous-and-categorical-variable." class="section level3">
+<h3>3. Mix continuous and categorical variable.</h3>
+<div id="a.-use-income-as-response-education-and-type-as-predictor." class="section level4">
+<h4>a. Use income as response, education and type as predictor.</h4>
+<pre class="r"><code>X=model.matrix(~education+type,data=mydata)
+#X
+Y=as.matrix(mydata$income)
+solve(t(X)%*%X)%*%t(X)%*%Y</code></pre>
+<pre><code>                  [,1]
+(Intercept) -2048.2080
+education     887.9126
+typeprof      102.1260
+typewc      -2685.8293</code></pre>
+<pre class="r"><code>lm(income~education+type,data=mydata)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ education + type, data = mydata)
+
+Coefficients:
+(Intercept)    education     typeprof       typewc  
+    -2048.2        887.9        102.1      -2685.8  </code></pre>
+<pre class="r"><code>#If the data is in letters, R recognize it as a categorical factor.</code></pre>
+</div>
+<div id="b.-if-you-dont-like-bc-be-reference-group-change-it-to-wc." class="section level4">
+<h4>b. If you don’t like bc be reference group, change it to wc.</h4>
+<pre class="r"><code>new=relevel(mydata$type,ref=&quot;wc&quot;)
+X=model.matrix(~education+new,data=mydata)
+Y=as.matrix(mydata$income)
+solve(t(X)%*%X)%*%t(X)%*%Y</code></pre>
+<pre><code>                  [,1]
+(Intercept) -4734.0372
+education     887.9126
+newbc        2685.8293
+newprof      2787.9553</code></pre>
+<pre class="r"><code>lm(income~education+new,data=mydata)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ education + new, data = mydata)
+
+Coefficients:
+(Intercept)    education        newbc      newprof  
+    -4734.0        887.9       2685.8       2788.0  </code></pre>
+</div>
+<div id="c.-like-constructing-a-linear-regression-model-you-may-also-include-interaction-terms" class="section level4">
+<h4>c. Like constructing a linear regression model, you may also include interaction terms</h4>
+<pre class="r"><code>X=model.matrix(~education+type+education*type,data=mydata)
+Y=as.matrix(mydata$income)
+solve(t(X)%*%X)%*%t(X)%*%Y</code></pre>
+<pre><code>                         [,1]
+(Intercept)        -1865.0362
+education            866.0004
+typeprof           -3068.3645
+typewc              3646.5441
+education:typeprof   234.0166
+education:typewc    -569.2417</code></pre>
+<pre class="r"><code>lm(income~education+type+education*type,data=mydata)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ education + type + education * type, data = mydata)
+
+Coefficients:
+       (Intercept)           education            typeprof              typewc  
+           -1865.0               866.0             -3068.4              3646.5  
+education:typeprof    education:typewc  
+             234.0              -569.2  </code></pre>
+</div>
+</div>
+<div id="what-if-you-want-a-categorical-variable-but-its-coded-in-123-etc." class="section level3">
+<h3>4. What if you want a categorical variable, but it’s coded in 1,2,3, etc.</h3>
+<div id="a.-directly-use-it-r-will-recognize-it-as-numeric-variable." class="section level4">
+<h4>a. Directly use it, R will recognize it as numeric variable.</h4>
+<pre class="r"><code>mydata2=cbind(mydata,c(rep(1,40),rep(2,38),rep(3,20)))
+colnames(mydata2)[7]=c(&quot;group&quot;)
+#mydata2
+lm(income~group,data=mydata2)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ group, data = mydata2)
+
+Coefficients:
+(Intercept)        group  
+       9889        -1643  </code></pre>
+</div>
+<div id="b.-we-can-manually-let-r-know-its-a-categorical-variable." class="section level4">
+<h4>b. We can manually let R know it’s a categorical variable.</h4>
+<pre class="r"><code>mydata2$group=factor(mydata2$group)
+lm(income~group,data=mydata2)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ group, data = mydata2)
+
+Coefficients:
+(Intercept)       group2       group3  
+       8891        -3643        -2641  </code></pre>
+<pre class="r"><code>#alternative way
+groupf=factor(mydata2$group)
+lm(income~groupf,data=mydata2)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ groupf, data = mydata2)
+
+Coefficients:
+(Intercept)      groupf2      groupf3  
+       8891        -3643        -2641  </code></pre>
+<pre class="r"><code>#alternative way
+lm(income~factor(group),data=mydata2)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ factor(group), data = mydata2)
+
+Coefficients:
+   (Intercept)  factor(group)2  factor(group)3  
+          8891           -3643           -2641  </code></pre>
+</div>
+</div>
+<div id="different-ways-to-code-interaction-term" class="section level3">
+<h3>5. Different ways to code interaction term</h3>
+<p>Note: A:B in model output just means the interaciton of A and B.</p>
+<div id="a.-2-predictor-variables-main-effect2way-interaction" class="section level4">
+<h4>a. 2 predictor variables, main effect+2way interaction</h4>
+<pre class="r"><code>library(car)
+#?Prestige#If you don&#39;t have the car package, download it from canvas. 
+#Or search for &quot;Prestige data R download&quot;,run the code on the first part.
+mydata=Prestige[!is.na(Prestige$type), ]#remove the observations with missing values for &quot;type&quot;
+
+fit1=lm(income~education+type+education*type,data=mydata)
+fit2=lm(income~education*type,data=mydata)#easier way to fit main effect+two way interactions.
+
+summary(fit1)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ education + type + education * type, data = mydata)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6330.8 -1769.2  -356.8  1166.5 17326.2 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)         -1865.0     3682.3  -0.506   0.6137  
+education             866.0      436.4   1.984   0.0502 .
+typeprof            -3068.4     7191.8  -0.427   0.6706  
+typewc               3646.5     9274.0   0.393   0.6951  
+education:typeprof    234.0      617.3   0.379   0.7055  
+education:typewc     -569.2      884.8  -0.643   0.5216  
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 3333 on 92 degrees of freedom
+Multiple R-squared:  0.4105,    Adjusted R-squared:  0.3785 
+F-statistic: 12.81 on 5 and 92 DF,  p-value: 1.856e-09</code></pre>
+<pre class="r"><code>summary(fit2)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ education * type, data = mydata)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6330.8 -1769.2  -356.8  1166.5 17326.2 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)         -1865.0     3682.3  -0.506   0.6137  
+education             866.0      436.4   1.984   0.0502 .
+typeprof            -3068.4     7191.8  -0.427   0.6706  
+typewc               3646.5     9274.0   0.393   0.6951  
+education:typeprof    234.0      617.3   0.379   0.7055  
+education:typewc     -569.2      884.8  -0.643   0.5216  
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 3333 on 92 degrees of freedom
+Multiple R-squared:  0.4105,    Adjusted R-squared:  0.3785 
+F-statistic: 12.81 on 5 and 92 DF,  p-value: 1.856e-09</code></pre>
+<pre class="r"><code>anova(fit1)</code></pre>
+<pre><code>Analysis of Variance Table
+
+Response: income
+               Df     Sum Sq   Mean Sq F value    Pr(&gt;F)    
+education       1  571532362 571532362 51.4405 1.824e-10 ***
+type            2  131170201  65585100  5.9030  0.003873 ** 
+education:type  2    9204946   4602473  0.4142  0.662067    
+Residuals      92 1022171653  11110561                      
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>anova(fit2)</code></pre>
+<pre><code>Analysis of Variance Table
+
+Response: income
+               Df     Sum Sq   Mean Sq F value    Pr(&gt;F)    
+education       1  571532362 571532362 51.4405 1.824e-10 ***
+type            2  131170201  65585100  5.9030  0.003873 ** 
+education:type  2    9204946   4602473  0.4142  0.662067    
+Residuals      92 1022171653  11110561                      
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="b.-3-variables-main-effect2-way-interaction3way-interaction" class="section level4">
+<h4>b. 3 variables, main effect+2-way interaction+3way interaction</h4>
+<pre class="r"><code>fit3=lm(income~education*prestige*type,data=mydata)
+summary(fit3)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ education * prestige * type, data = mydata)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7308.5 -1298.8   -43.7  1042.7 14931.1 
+
+Coefficients:
+                             Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)                  1271.267  13648.811   0.093    0.926
+education                    -153.036   1649.057  -0.093    0.926
+prestige                       83.903    365.031   0.230    0.819
+typeprof                    15065.227  52790.498   0.285    0.776
+typewc                      -7791.876  32929.831  -0.237    0.814
+education:prestige              7.917     42.197   0.188    0.852
+education:typeprof          -1855.988   3812.498  -0.487    0.628
+education:typewc              770.944   3094.399   0.249    0.804
+prestige:typeprof            -144.986    878.148  -0.165    0.869
+prestige:typewc               298.456    831.765   0.359    0.721
+education:prestige:typeprof    19.779     67.857   0.291    0.771
+education:prestige:typewc     -32.107     75.827  -0.423    0.673
+
+Residual standard error: 2973 on 86 degrees of freedom
+Multiple R-squared:  0.5617,    Adjusted R-squared:  0.5056 
+F-statistic: 10.02 on 11 and 86 DF,  p-value: 1.811e-11</code></pre>
+<pre class="r"><code>anova(fit3)</code></pre>
+<pre><code>Analysis of Variance Table
+
+Response: income
+                        Df    Sum Sq   Mean Sq F value    Pr(&gt;F)    
+education                1 571532362 571532362 64.6635 4.364e-12 ***
+prestige                 1 294893058 294893058 33.3644 1.192e-07 ***
+type                     2  26517925  13258962  1.5001   0.22888    
+education:prestige       1  28765753  28765753  3.2546   0.07473 .  
+education:type           2  22885604  11442802  1.2946   0.27928    
+prestige:type            2  25857546  12928773  1.4628   0.23730    
+education:prestige:type  2   3510967   1755483  0.1986   0.82024    
+Residuals               86 760115948   8838558                      
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="c.-more-variables-main-effect-model" class="section level4">
+<h4>c. More variables, main effect model</h4>
+<pre class="r"><code>colnames(mydata)</code></pre>
+<pre><code>[1] &quot;education&quot; &quot;income&quot;    &quot;women&quot;     &quot;prestige&quot;  &quot;census&quot;    &quot;type&quot;     </code></pre>
+<pre class="r"><code>fit4=lm(income~education+women+prestige+census+type,data=mydata)
+fit5=lm(income~., data=mydata)
+summary(fit4)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ education + women + prestige + census + 
+    type, data = mydata)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7752.4  -954.6  -331.2   742.6 14301.3 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    7.32053 3037.27048   0.002  0.99808    
+education    131.18372  288.74961   0.454  0.65068    
+women        -53.23480    9.83107  -5.415 4.96e-07 ***
+prestige     139.20912   36.40239   3.824  0.00024 ***
+census         0.04209    0.23568   0.179  0.85865    
+typeprof     509.15150 1798.87914   0.283  0.77779    
+typewc       347.99010 1173.89384   0.296  0.76757    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 2633 on 91 degrees of freedom
+Multiple R-squared:  0.6363,    Adjusted R-squared:  0.6123 
+F-statistic: 26.54 on 6 and 91 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>summary(fit5)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ ., data = mydata)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7752.4  -954.6  -331.2   742.6 14301.3 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    7.32053 3037.27048   0.002  0.99808    
+education    131.18372  288.74961   0.454  0.65068    
+women        -53.23480    9.83107  -5.415 4.96e-07 ***
+prestige     139.20912   36.40239   3.824  0.00024 ***
+census         0.04209    0.23568   0.179  0.85865    
+typeprof     509.15150 1798.87914   0.283  0.77779    
+typewc       347.99010 1173.89384   0.296  0.76757    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 2633 on 91 degrees of freedom
+Multiple R-squared:  0.6363,    Adjusted R-squared:  0.6123 
+F-statistic: 26.54 on 6 and 91 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>anova(fit4)</code></pre>
+<pre><code>Analysis of Variance Table
+
+Response: income
+          Df    Sum Sq   Mean Sq F value    Pr(&gt;F)    
+education  1 571532362 571532362 82.4671 2.136e-14 ***
+women      1 406580350 406580350 58.6660 1.932e-11 ***
+prestige   1 124639280 124639280 17.9844 5.342e-05 ***
+census     1        43        43  0.0000    0.9980    
+type       2    658471    329235  0.0475    0.9536    
+Residuals 91 630668656   6930425                      
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>anova(fit5)</code></pre>
+<pre><code>Analysis of Variance Table
+
+Response: income
+          Df    Sum Sq   Mean Sq F value    Pr(&gt;F)    
+education  1 571532362 571532362 82.4671 2.136e-14 ***
+women      1 406580350 406580350 58.6660 1.932e-11 ***
+prestige   1 124639280 124639280 17.9844 5.342e-05 ***
+census     1        43        43  0.0000    0.9980    
+type       2    658471    329235  0.0475    0.9536    
+Residuals 91 630668656   6930425                      
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="d.-more-variables-main-effect2way-interactions.-use-a-subset-just-to-read-it-clearly." class="section level4">
+<h4>d. More variables, main effect+2way interactions. use a subset, just to read it clearly.</h4>
+<pre class="r"><code>test=mydata[,c(1,2,3,6)]
+colnames(test)</code></pre>
+<pre><code>[1] &quot;education&quot; &quot;income&quot;    &quot;women&quot;     &quot;type&quot;     </code></pre>
+<pre class="r"><code>fit6=lm(income~education+women+type+education*women+education*type+women*type,data=test)
+fit7=lm(income~.*.,data=test)
+summary(fit6)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ education + women + type + education * 
+    women + education * type + women * type, data = test)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8370.8  -967.7    38.1   641.3 15133.4 
+
+Coefficients:
+                    Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)          301.455   3607.274   0.084   0.9336  
+education            700.898    415.143   1.688   0.0949 .
+women                 23.746     83.827   0.283   0.7776  
+typeprof           -2347.177   6296.157  -0.373   0.7102  
+typewc             -4494.487   8394.279  -0.535   0.5937  
+education:women       -8.276     10.302  -0.803   0.4240  
+education:typeprof   369.593    532.130   0.695   0.4892  
+education:typewc     406.283    800.590   0.507   0.6131  
+women:typeprof        -5.102     63.458  -0.080   0.9361  
+women:typewc          12.666     40.847   0.310   0.7572  
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 2797 on 88 degrees of freedom
+Multiple R-squared:  0.603, Adjusted R-squared:  0.5623 
+F-statistic: 14.85 on 9 and 88 DF,  p-value: 2.314e-14</code></pre>
+<pre class="r"><code>summary(fit7)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ . * ., data = test)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8370.8  -967.7    38.1   641.3 15133.4 
+
+Coefficients:
+                    Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)          301.455   3607.274   0.084   0.9336  
+education            700.898    415.143   1.688   0.0949 .
+women                 23.746     83.827   0.283   0.7776  
+typeprof           -2347.177   6296.157  -0.373   0.7102  
+typewc             -4494.487   8394.279  -0.535   0.5937  
+education:women       -8.276     10.302  -0.803   0.4240  
+education:typeprof   369.593    532.130   0.695   0.4892  
+education:typewc     406.283    800.590   0.507   0.6131  
+women:typeprof        -5.102     63.458  -0.080   0.9361  
+women:typewc          12.666     40.847   0.310   0.7572  
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 2797 on 88 degrees of freedom
+Multiple R-squared:  0.603, Adjusted R-squared:  0.5623 
+F-statistic: 14.85 on 9 and 88 DF,  p-value: 2.314e-14</code></pre>
+<pre class="r"><code>anova(fit6)</code></pre>
+<pre><code>Analysis of Variance Table
+
+Response: income
+                Df    Sum Sq   Mean Sq F value    Pr(&gt;F)    
+education        1 571532362 571532362 73.0486 3.513e-13 ***
+women            1 406580350 406580350 51.9658 1.854e-10 ***
+type             2  16680220   8340110  1.0660   0.34880    
+education:women  1  42063438  42063438  5.3762   0.02273 *  
+education:type   2   4984218   2492109  0.3185   0.72806    
+women:type       2   3726476   1863238  0.2381   0.78860    
+Residuals       88 688512099   7824001                      
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>anova(fit7)</code></pre>
+<pre><code>Analysis of Variance Table
+
+Response: income
+                Df    Sum Sq   Mean Sq F value    Pr(&gt;F)    
+education        1 571532362 571532362 73.0486 3.513e-13 ***
+women            1 406580350 406580350 51.9658 1.854e-10 ***
+type             2  16680220   8340110  1.0660   0.34880    
+education:women  1  42063438  42063438  5.3762   0.02273 *  
+education:type   2   4984218   2492109  0.3185   0.72806    
+women:type       2   3726476   1863238  0.2381   0.78860    
+Residuals       88 688512099   7824001                      
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>formula(fit7)#use this funciton to know what kind fo model you&#39;re fitting.</code></pre>
+<pre><code>income ~ (education + women + type) * (education + women + type)</code></pre>
+</div>
+</div>
+<div id="compute-the-f-statistic-based-on-the-anova-table." class="section level3">
+<h3>6. Compute the F statistic based on the ANOVA table.</h3>
+<p>Use the result of fit7 as an example.</p>
+<pre class="r"><code>names(anova(fit7))</code></pre>
+<pre><code>[1] &quot;Df&quot;      &quot;Sum Sq&quot;  &quot;Mean Sq&quot; &quot;F value&quot; &quot;Pr(&gt;F)&quot; </code></pre>
+<pre class="r"><code>SSvec=anova(fit7)$&quot;Sum Sq&quot;
+SSR=sum(SSvec[1:6])
+#SSR=sum(SSvec[-7])
+SSE=SSvec[7]
+dfvec=anova(fit7)$Df
+dfR=sum(dfvec[1:6])
+#dfR=sum(dfvec[-7])
+dfE=dfvec[7]
+Fstat=(SSR/dfR)/(SSE/dfE)
+Fstat</code></pre>
+<pre><code>[1] 14.84843</code></pre>
+<pre class="r"><code>dfR</code></pre>
+<pre><code>[1] 9</code></pre>
+<pre class="r"><code>dfE</code></pre>
+<pre><code>[1] 88</code></pre>
+<pre class="r"><code>pval=1-pf(Fstat,dfR,dfE)
+pval</code></pre>
+<pre><code>[1] 2.309264e-14</code></pre>
+<pre class="r"><code>#If alpha=0.05, the critical value can also be computed.
+alpha=0.05
+qf((1-alpha),dfR,dfE)</code></pre>
+<pre><code>[1] 1.988048</code></pre>
+</div>
+<div id="comment-about-the-commen-steps-to-work-on-multivariate-data.-use-two-predictor-variables-as-an-example." class="section level3">
+<h3>7. Comment about the commen steps to work on multivariate data. Use two predictor variables as an example.</h3>
+<div id="do-explorative-data-analysis.-for-example-draw-scatter-plot-compute-correlation-matrix" class="section level5">
+<h5>(1) Do explorative data analysis. For example draw scatter plot, compute correlation matrix</h5>
+</div>
+<div id="most-of-the-time-start-with-fitting-a-full-interaction-model." class="section level5">
+<h5>(2) Most of the time, start with fitting a full interaction model.</h5>
+</div>
+<div id="test-the-interaction-terms-first." class="section level5">
+<h5>(3) Test the interaction terms first.</h5>
+<ul>
+<li>If the the interaction term(s) is/are insignificant, delete them and fit an “equal slopes” model.</li>
+<li>If the interaction term(s) is are significant, the model cannot be further simplified, even though the main effects are not significant.</li>
+</ul>
+</div>
+<div id="if-there-isare-insignificant-predictors-in-an-equal-slope-model-we-may-drop-them." class="section level5">
+<h5>(4) If there is/are insignificant predictor(s) in an equal slope model, we may drop them.</h5>
+<pre class="r"><code>fit=lm(income~.*.,data=mydata[1:49,c(2,4,5)])
+summary(fit)</code></pre>
+<pre><code>
+Call:
+lm(formula = income ~ . * ., data = mydata[1:49, c(2, 4, 5)])
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6954.4 -1343.4  -659.7  1360.6 12551.3 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)     -2.609e+04  1.261e+04  -2.069  0.04436 * 
+prestige         6.035e+02  2.017e+02   2.992  0.00449 **
+census           6.358e+00  3.412e+00   1.863  0.06895 . 
+prestige:census -1.213e-01  5.915e-02  -2.050  0.04617 * 
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 3844 on 45 degrees of freedom
+Multiple R-squared:  0.4966,    Adjusted R-squared:  0.463 
+F-statistic: 14.79 on 3 and 45 DF,  p-value: 7.704e-07</code></pre>
+<pre class="r"><code>anova(fit)</code></pre>
+<pre><code>Analysis of Variance Table
+
+Response: income
+                Df    Sum Sq   Mean Sq F value    Pr(&gt;F)    
+prestige         1 588423430 588423430 39.8284 1.077e-07 ***
+census           1   5185606   5185606  0.3510   0.55652    
+prestige:census  1  62117352  62117352  4.2045   0.04617 *  
+Residuals       45 664827836  14773952                      
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.1 (2019-07-05)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Mojave 10.14.6
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] ggplot2_3.2.1 car_3.0-4     carData_3.0-2
+
+loaded via a namespace (and not attached):
+ [1] zip_2.0.4         Rcpp_1.0.4.6      cellranger_1.1.0  compiler_3.6.1   
+ [5] pillar_1.4.3      git2r_0.26.1      workflowr_1.4.0   forcats_0.4.0    
+ [9] tools_3.6.1       digest_0.6.25     gtable_0.3.0      evaluate_0.14    
+[13] tibble_3.0.0      lifecycle_0.2.0   pkgconfig_2.0.3   rlang_0.4.5      
+[17] openxlsx_4.1.3    cli_2.0.2         curl_4.3          yaml_2.2.1       
+[21] haven_2.1.1       xfun_0.12         rio_0.5.16        withr_2.1.2      
+[25] dplyr_0.8.3       stringr_1.4.0     knitr_1.28        fs_1.4.1         
+[29] vctrs_0.2.4       hms_0.5.1         tidyselect_0.2.5  grid_3.6.1       
+[33] rprojroot_1.3-2   glue_1.4.0        data.table_1.12.2 R6_2.4.1         
+[37] fansi_0.4.1       readxl_1.3.1      foreign_0.8-71    rmarkdown_1.15   
+[41] purrr_0.3.3       magrittr_1.5      whisker_0.4       scales_1.0.0     
+[45] backports_1.1.6   htmltools_0.4.0   ellipsis_0.3.0    abind_1.4-5      
+[49] assertthat_0.2.1  colorspace_1.4-1  labeling_0.3      stringi_1.4.6    
+[53] lazyeval_0.2.2    munsell_0.5.0     crayon_1.3.4     </code></pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
