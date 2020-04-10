@@ -163,3 +163,22 @@ $$
 			\end{array} \right.
 		\end{eqnarray*}
 $$
+
+## Note: Fit model with transformed predictor/response
+Plastic hardness data, fit $Y=\beta_0+\beta_1X+\epsilon$. 
+
+```{r}
+plastic=read.table("http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%201%20Data%20Sets/CH01PR22.txt")
+colnames(plastic)=c("Y","X")
+lm(Y~X,data=plastic)
+lm(Y~X^2,data=plastic)
+```
+What's wrong with the above result?
+
+Solutions:
+```{r}
+Y2=(plastic$Y)^2
+X2=(plastic$X)^2
+lm(Y~X2,data=plastic)
+lm(Y~I(X^2),data=plastic)
+```
