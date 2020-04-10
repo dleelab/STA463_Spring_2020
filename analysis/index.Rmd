@@ -24,5 +24,33 @@ editor_options:
 #### Lab5
 * [COVID-19 data](corona.html)
 
+#### Lab6
+* [Confidence/Prediction Intervals](intervals.html)
 
+<!--
+* [Lab assignment 1](lab_hw1.html)
+* [Lab assignment 1 sol](lab_hw1.html)
+-->
+
+#### Lab7
+* [ANOVA & descriptive measures](anova_desc.html)
+
+#### Lab8
+* [Diagnostics](diagnostics.html)
+
+#### Lab9
+* [Transformation](transform.html)
+
+#### Lab10
+* [Simultaneous CI/PIs](sim_CI_PI.html)
+* [RTTO](RTTO.html)
+* [Multiple regression model](fit_mr.html)
+
+#### Lab11
+* [Diagnostics for multiple regression model](diagnostics_mr.html)
+* [Diagnostics 2](diagnostics_mr2.html)
+
+#### Lab12
+* [Lecture Note 16 Code](lec16_code.html)
+* [Lecture Note 17 Code](lec17_code.html)
 
