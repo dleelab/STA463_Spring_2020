@@ -1,0 +1,54 @@
+---
+title: "Regression through the origin"
+author: "Donghyung Lee"
+date: "`r Sys.Date()`"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Regression through the origin.
+**View the simple linear regression fit, and recall the discussion we had in class, adjust your model and fit a regression through the origin model (RTTO) instead. Obtain the estimated regression function.**
+```{r}
+data0120=read.table("http://www.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%201%20Data%20Sets/CH01PR20.txt")
+colnames(data0120)=c("minutes","copiers_number")
+
+fit2=lm(minutes~copiers_number-1,data=data0120)
+summary(fit2)
+```
+The estimated regression function is $\hat{Y_i}=14.9472X_i$, (or estimated minutes=14.9472* copiers_number)
+
+### Check the residuals.
+**Check $\sum_{i=1}^{n}e_i\neq0$ and  $\sum_{i=1}^{n}e_iX_i=0$.**
+```{r}
+res=fit2$residuals
+sum(res)
+sum(data0120$copiers_number*res)
+```
+Based on the calculation above, $\sum_{i=1}^{n}e_i=-5.86$ is not equal to 0 and $\sum_{i=1}^{n}e_iX_i=-1.46*10^{-13}$, almost equal to 0.
+
+
+### Confidence interval.
+**Estimate $\beta_1$ with a 95\% confidence interval.**
+```{r}
+confint(fit2,,level=0.95)
+```
+The 95% confidence interval for $\beta_1$ is (14.49,15.40).
+
+### Prediction interval.
+**Predict the service time on a call in which six copiers are serviced. Use a 98\% confidence level.**
+```{r}
+predict(fit2,new=data.frame(copiers_number=6),interval="prediction",level=0.98,data=data0120)
+```
+The 98% prediction interval for the service time on a call in which 6 copiers are serviced is (68.15,111.22)
+
+### Simultaneous prediction interval.
+**Estimate the number of minutes spent when there are 2,3,4,5 copiers to be serviced. Use a 95\% family confidence coefficient and use Bonferroni method. **
+```{r}
+alphaF=1-0.95
+g=4
+alpha=alphaF/g
+predict(fit2,new=data.frame(copiers_number=c(2,3,4,5)),interval = "pred",level=1-alpha,data=data0120)
+```
+
+The 95% simultaneous PI for the number of minutes spent when there're 2,3,4,5 copiers to be serviced is as above.
