@@ -46,6 +46,7 @@ editor_options:
 * [RTTO](RTTO.html)
 * [Multiple regression model](fit_mr.html)
 
+<!--
 #### Lab11
 * [Diagnostics for multiple regression model](diagnostics_mr.html)
 * [Diagnostics 2](diagnostics_mr2.html)
@@ -53,4 +54,4 @@ editor_options:
 #### Lab12
 * [Lecture Note 16 Code](lec16_code.html)
 * [Lecture Note 17 Code](lec17_code.html)
-
+-->
