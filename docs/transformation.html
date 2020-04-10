@@ -486,10 +486,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomdleelabSTA463Spring2020tree45fd0216ff049f59c933eb16035ed5c1879df90ctargetblank45fd021a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/dleelab/STA463_Spring_2020/tree/45fd0216ff049f59c933eb16035ed5c1879df90c" target="_blank">45fd021</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomdleelabSTA463Spring2020treee5e0b85c2cf98a93e1d6972f7d533024acf21f7btargetblanke5e0b85a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/dleelab/STA463_Spring_2020/tree/e5e0b85c2cf98a93e1d6972f7d533024acf21f7b" target="_blank">e5e0b85</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomdleelabSTA463Spring2020tree45fd0216ff049f59c933eb16035ed5c1879df90ctargetblank45fd021a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomdleelabSTA463Spring2020treee5e0b85c2cf98a93e1d6972f7d533024acf21f7btargetblanke5e0b85a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -502,7 +502,8 @@ Ignored files:
     Ignored:    lec/
 
 Untracked files:
-    Untracked:  docs/figure/transformation.Rmd/
+    Untracked:  analysis/fit_mr.Rmd
+    Untracked:  docs/figure/fit_mr.Rmd/
 
 Unstaged changes:
     Modified:   analysis/corona.Rmd
@@ -544,6 +545,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/dleelab/STA463_Spring_2020/blob/e5e0b85c2cf98a93e1d6972f7d533024acf21f7b/analysis/transformation.Rmd" target="_blank">e5e0b85</a>
+</td>
+<td>
+dleelab
+</td>
+<td>
+2020-04-10
+</td>
+<td>
+added
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/dleelab/STA463_Spring_2020/8e09c30fb68480f1443c02e29655a2d2eda89ac5/docs/transformation.html" target="_blank">8e09c30</a>
+</td>
+<td>
+dleelab
+</td>
+<td>
+2020-04-10
+</td>
+<td>
+added
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -626,6 +661,43 @@ attach(Cars93)
 fit=lm(MPG.highway~Weight)
 bc=boxcox(fit)#in library(MASS)</code></pre>
 <p><img src="figure/transformation.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
+Past versions of unnamed-chunk-1-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dleelab/STA463_Spring_2020/blob/8e09c30fb68480f1443c02e29655a2d2eda89ac5/docs/figure/transformation.Rmd/unnamed-chunk-1-1.png" target="_blank">8e09c30</a>
+</td>
+<td>
+dleelab
+</td>
+<td>
+2020-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#find lambda
 bc$x[which.max(bc$y)]</code></pre>
 <pre><code>[1] -0.7070707</code></pre>
@@ -641,10 +713,84 @@ bc$x[which.max(bc$y)]</code></pre>
 <pre class="r"><code>fit2=lm(1/MPG.highway~Weight)
 plot(fit2,which=2)</code></pre>
 <p><img src="figure/transformation.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
+Past versions of unnamed-chunk-2-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dleelab/STA463_Spring_2020/blob/8e09c30fb68480f1443c02e29655a2d2eda89ac5/docs/figure/transformation.Rmd/unnamed-chunk-2-1.png" target="_blank">8e09c30</a>
+</td>
+<td>
+dleelab
+</td>
+<td>
+2020-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>par(mfrow=c(1,2))
 plot(fit,which=2)
 plot(fit2,which=2)</code></pre>
 <p><img src="figure/transformation.Rmd/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-2">
+Past versions of unnamed-chunk-2-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-2-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dleelab/STA463_Spring_2020/blob/8e09c30fb68480f1443c02e29655a2d2eda89ac5/docs/figure/transformation.Rmd/unnamed-chunk-2-2.png" target="_blank">8e09c30</a>
+</td>
+<td>
+dleelab
+</td>
+<td>
+2020-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>shapiro.test(fit$residuals) #before</code></pre>
 <pre><code>
     Shapiro-Wilk normality test
@@ -673,6 +819,43 @@ par(mfrow=c(1,2))
 plot(fit, which=3)
 plot(fit2,which=3) </code></pre>
 <p><img src="figure/transformation.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/dleelab/STA463_Spring_2020/blob/8e09c30fb68480f1443c02e29655a2d2eda89ac5/docs/figure/transformation.Rmd/unnamed-chunk-3-1.png" target="_blank">8e09c30</a>
+</td>
+<td>
+dleelab
+</td>
+<td>
+2020-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>bptest(MPG.highway~Weight)</code></pre>
 <pre><code>
     studentized Breusch-Pagan test
@@ -738,6 +921,48 @@ pred</code></pre>
             \end{array} \right.
         \end{eqnarray*}
 \]</span></p>
+</div>
+<div id="note-fit-model-with-transformed-predictorresponse" class="section level2">
+<h2>Note: Fit model with transformed predictor/response</h2>
+<p>Plastic hardness data, fit <span class="math inline">\(Y=\beta_0+\beta_1X+\epsilon\)</span>.</p>
+<pre class="r"><code>plastic=read.table(&quot;http://users.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%201%20Data%20Sets/CH01PR22.txt&quot;)
+colnames(plastic)=c(&quot;Y&quot;,&quot;X&quot;)
+lm(Y~X,data=plastic)</code></pre>
+<pre><code>
+Call:
+lm(formula = Y ~ X, data = plastic)
+
+Coefficients:
+(Intercept)            X  
+    168.600        2.034  </code></pre>
+<pre class="r"><code>lm(Y~X^2,data=plastic)</code></pre>
+<pre><code>
+Call:
+lm(formula = Y ~ X^2, data = plastic)
+
+Coefficients:
+(Intercept)            X  
+    168.600        2.034  </code></pre>
+<p>What’s wrong with the above result?</p>
+<p>Solutions:</p>
+<pre class="r"><code>Y2=(plastic$Y)^2
+X2=(plastic$X)^2
+lm(Y~X2,data=plastic)</code></pre>
+<pre><code>
+Call:
+lm(formula = Y ~ X2, data = plastic)
+
+Coefficients:
+(Intercept)           X2  
+  194.88253      0.03551  </code></pre>
+<pre class="r"><code>lm(Y~I(X^2),data=plastic)</code></pre>
+<pre><code>
+Call:
+lm(formula = Y ~ I(X^2), data = plastic)
+
+Coefficients:
+(Intercept)       I(X^2)  
+  194.88253      0.03551  </code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
