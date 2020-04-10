@@ -11,11 +11,11 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-### Simultaneous CI/PIs
+## Simultaneous CI/PIs
 
 #### **Fit a simple linear regression model, estimate the expected number of minutes spent when there are 3,5 and 7 copiers to be serviced, respectively. Use a 90\% family confidence coefficient, calculate the simultaneous confidence interval, based on Working-Hotelling procedure and Bonferroni respectively.**
 
-#### (a) W-H Method.
+### W-H Method.
 ```{r}
 data0120=read.table("http://www.stat.ufl.edu/~rrandles/sta4210/Rclassnotes/data/textdatasets/KutnerData/Chapter%20%201%20Data%20Sets/CH01PR20.txt")
 colnames(data0120)=c("minutes","copiers_number")
@@ -36,7 +36,7 @@ simulCI
 ```
 The 90% simultaneous CI using W-H method is as above.
 
-#### (b) Bonferroni method.
+### Bonferroni method.
 ```{r}
 g=3
 alpha=alphaF/g
@@ -45,7 +45,7 @@ predict(fit,new=data.frame(copiers_number=c(3,5,7)),interval = "conf",level=1-al
 The 90% simultaneous CI using Bonferroni method is as above.
 
 
-#### Discussion.
+## Discussion.
 **From result above, which simultaneous confidence interval calculation method do you prefer? Why? (Therefore, in practice, before compute the simultaneous CI or PI, you would compare the multiplier first, and use whichever method that yields a smaller multiplier)**
 
 Compare the results above, I would prefer the Bonferroni method. Because it provides a shorter confidence interval.
