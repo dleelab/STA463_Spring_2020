@@ -44,6 +44,8 @@ editor_options:
 #### Lab10
 * [Simultaneous CI/PIs](sim_CI_PI.html)
 * [RTTO](RTTO.html)
+
+#### Lab11
 * [Multiple regression model](fit_mr.html)
 
 <!--
