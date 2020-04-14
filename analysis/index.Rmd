@@ -39,7 +39,7 @@ editor_options:
 * [Diagnostics](diagnostics.html)
 
 #### Lab9
-* [Transformation](transform.html)
+* [Transformation](transformation.html)
 
 #### Lab10
 * [Simultaneous CI/PIs](sim_CI_PI.html)
