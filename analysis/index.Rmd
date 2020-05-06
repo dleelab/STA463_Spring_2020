@@ -47,6 +47,12 @@ editor_options:
 
 #### Lab11
 * [Multiple regression model](fit_mr.html)
+* [Diagnostics for multiple regression model](diagnostics_mr.html)
+
+#### Lab12
+* [General linear F test](gen_lin_ftest.html)
+* [Model selection](model_selection.html)
+
 
 <!--
 #### Lab11
